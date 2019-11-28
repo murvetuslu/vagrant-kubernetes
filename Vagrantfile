@@ -40,6 +40,11 @@ $microk8sScript = <<-SCRIPT
     snap alias microk8s.kubectl kubectl
 SCRIPT
 
+$mysqlScript = <<-SCRIPT
+    kubectl apply -f /vagrant/mysql-deployment.yaml
+    kubectl apply -f /vagrant/mysql-services.yaml
+SCRIPT
+
 
 Vagrant.configure("2") do |config|
 
@@ -59,7 +64,7 @@ Vagrant.configure("2") do |config|
             end
 
             config.vm.provision "shell", inline: $microk8sScript
-            config.vm.provision "shell", inline: "echo 'hello world'"
+            config.vm.provision "shell", inline: $mysqlScript
 
         end
 
