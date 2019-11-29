@@ -1,21 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  labels:
+    app: mysql-test
+spec:
+  type: NodePort
+  ports:
+  - port: 3306
+    protocol: TCP
+  selector:
+    app: mysql-test01
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql
+  name: mysql-test
 spec:
   selector:
     matchLabels:
-     app: mysql8
+     app: mysql-test
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql8
+        app: mysql-test
     spec:
      containers:
-     - image: mysql:8.0
-       name: mysql
+     - image: mysql:5.7
+       name: mysql-test
        env:
        - name: MYSQL_ROOT_PASSWORD
          value: password
@@ -27,4 +42,4 @@ spec:
          value: password
        ports:
        - containerPort: 3306
-         name: mysql8
+         name: mysql-test
