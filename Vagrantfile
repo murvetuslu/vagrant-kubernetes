@@ -41,8 +41,8 @@ $microk8sScript = <<-SCRIPT
 SCRIPT
 
 $mysqlScript = <<-SCRIPT
-    kubectl apply -f /vagrant/mysql-deployment.yaml
-    kubectl apply -f /vagrant/mysql-services.yaml
+    kubectl apply -f /vagrant/Mysql/mysql-deployment.yaml
+    kubectl apply -f /vagrant/Mysql/mysql-services.yaml
 SCRIPT
 
 
