@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-test
+spec:
+  selector:
+    app: python-test
+  type: NodePort
+  ports:
+  - protocol: "TCP"
+    port: 3000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-test
+spec:
+  selector:
+    matchLabels:
+      app: python-test
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: python-test
+    spec:
+      containers:
+      - name: python-test
+        image: python-test
+        env:
+        - name: MYSQL_USERNAME
+          value: "db_user"
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secrets
+              key: USER_PASSWORD
+        - name: MYSQL_INSTANCE_NAME
+          value: "my_db"
+        - name: MYSQL_PORT_3306_TCP_ADDR
+          value: "mysql-service"
+        - name: MYSQL_PORT_3306_TCP_PORT
+          value: "3306"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
