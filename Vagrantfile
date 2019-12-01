@@ -45,6 +45,11 @@ $mysqlScript = <<-SCRIPT
     kubectl apply -f /vagrant/Mysql/mysql-deployment.yaml
 SCRIPT
 
+$pythonScript = <<-SCRIPT
+    docker build -t python-test:latest /vagrant/Docker/
+    kubectl apply -f /vagrant/Python/python-deployment.yaml
+SCRIPT
+
 
 Vagrant.configure("2") do |config|
 
@@ -65,6 +70,7 @@ Vagrant.configure("2") do |config|
 
             config.vm.provision "shell", inline: $microk8sScript
             config.vm.provision "shell", inline: $mysqlScript
+            config.vm.provision "shell", inline: $pythonScript
 
         end
 
