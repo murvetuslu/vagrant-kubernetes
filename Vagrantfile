@@ -12,7 +12,7 @@ servers = [
     }
 ]
 
-# This script to install microk8s  after a box is provisioned
+# This script to install microk8s after a box is provisioned
 $microk8sScript = <<-SCRIPT
     apt-get update
     apt-get -y install apt-transport-https
@@ -36,28 +36,40 @@ $microk8sScript = <<-SCRIPT
     #microk8s.kubectl config view --raw > /vagrant/.kube-config
 
     snap alias microk8s.docker docker
-    snap alias microk8s.istioctl istioctl
     snap alias microk8s.kubectl kubectl
 SCRIPT
 
+# The script create mysql secret and mysql service in k8s
 $mysqlScript = <<-SCRIPT
     kubectl apply -f /vagrant/Mysql/mysql-secret.yaml
     kubectl apply -f /vagrant/Mysql/mysql-deployment.yaml
 SCRIPT
 
+# The script create docker image and python application service in k8s
 $pythonScript = <<-SCRIPT
     docker build -t python-test:latest /vagrant/Docker/
     kubectl apply -f /vagrant/Python/python-deployment.yaml
 SCRIPT
 
+# The script connect to created machine and run for deploy command
+$pushcript = <<-SCRIPT
+vagrant ssh microk8s -c "pwd ; docker build -t python-test:latest /vagrant/Docker/ ; kubectl delete deployment python-test ; kubectl apply -f /vagrant/Python/python-deployment.yaml"
+SCRIPT
 
 Vagrant.configure("2") do |config|
+
+
+    config.push.define "local-exec" do |push|
+        push.inline= $pushcript
+    end
 
     servers.each do |opts|
         config.vm.define opts[:name] do |config|
 
             config.vm.box = opts[:box]
             config.vm.box_version = opts[:box_version]
+
+            config.vm.network "forwarded_port", guest: 31000, host: 3000
 
             config.vm.provider "virtualbox" do |v|
                 v.gui = true
