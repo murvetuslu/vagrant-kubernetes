@@ -38,10 +38,10 @@ As you can see above, you can also configure Machine name, memory and CPU in the
 vagrant push
 ```
 
-You can see also changes after on following command or request the this url(http://127.0.0.1:31000) on browser.
+You can see also changes after on following command or request the this url(http://127.0.0.1:3000) on browser.
 
 ```
-curl http://0.0.0.0:31000
+curl http://127.0.0.1:3000
 ```
 
 
