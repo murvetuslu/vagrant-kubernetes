@@ -10,7 +10,7 @@ spec:
   - port: 3306
     protocol: TCP
   selector:
-    app: mysql-test01
+    app: mysql-test
 
 ---
 apiVersion: apps/v1
